@@ -1,6 +1,6 @@
 ﻿namespace GreenVsRed.Models
 {
-    sealed internal class GridCell
+    internal sealed class GridCell
     {
         public int Value;
         public int BeenGreenCount;
@@ -10,9 +10,7 @@
         {
             this.Value = value;
 
-            if (value == 1) BeenGreenCount = 1;
-            else BeenGreenCount = 0;
-
+            BeenGreenCount = 0;
             SwitchesNextGeneration = false;
         }
 
