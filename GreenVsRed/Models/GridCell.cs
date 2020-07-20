@@ -10,7 +10,9 @@
         {
             this.Value = value;
 
-            BeenGreenCount = 0;
+            if (value == 1) BeenGreenCount = 1;
+            else BeenGreenCount = 0;
+
             SwitchesNextGeneration = false;
         }
 

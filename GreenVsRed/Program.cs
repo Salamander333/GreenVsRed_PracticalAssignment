@@ -2,6 +2,7 @@
 using GreenVsRed.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GreenVsRed
 {
@@ -10,24 +11,59 @@ namespace GreenVsRed
         static void Main(string[] args)
         {
             GridCell[][] grid = GridFactory.InitializeGrid();
-
-            Console.Write("Write the cordinates if the cell you want to track \n" +
-                          "and the number of gemnerations in the format [x, y, generations]:");
-            var cellToCount = Console.ReadLine().Split(", ");
-            var cellCoordinates = new int[] { int.Parse(cellToCount[0]), int.Parse(cellToCount[1]) };
+            
+            var cellToCount = ValidateCellToTrackInput(grid[0].Length, grid.Length);
+            var cellCoordinates = new int[] { int.Parse(cellToCount[1]), int.Parse(cellToCount[0]) };
             var generationsCount = int.Parse(cellToCount[2]);
 
             var cellToTrack = GetCellToTrack(grid, cellCoordinates);
 
-            PrintGrid(grid);
+            //PrintGrid(grid);
 
             for (int i = 0; i < generationsCount; i++)
             {
                 CalculateGeneration(grid);
             }
 
+            Console.WriteLine();
+            Console.WriteLine("------------------------------------------");
+            Console.WriteLine();
             Console.WriteLine($"Number of generations cell with coordinates " +
-                $"{cellCoordinates[0]}, {cellCoordinates[1]} stayed green: {cellToTrack.BeenGreenCount}");
+                $"{cellCoordinates[1]}, {cellCoordinates[0]} stayed green: {cellToTrack.BeenGreenCount}");
+        }
+
+        private static string[] ValidateCellToTrackInput(int width, int height)
+        {
+            string[] result;
+            while (true)
+            {
+                Console.Write("Write the cordinates if the cell you want to track \n" +
+                          "and the number of gemnerations in the format [x, y, generations]:");
+
+                result = Console.ReadLine().Split(", ");
+                if (result.Length < 3 || result.Length > 3)
+                {
+                    Console.WriteLine("Invalid input format");
+                    continue;
+                }
+
+                int num;
+                if (!result.All(x => int.TryParse(x, out num)))
+                {
+                    Console.WriteLine("All values must be numbers");
+                    continue;
+                }
+
+                if (int.Parse(result[0]) > width - 1 || int.Parse(result[1]) > height - 1)
+                {
+                    Console.WriteLine("Invalid cell coordinates");
+                    continue;
+                }
+
+                break;
+            }
+
+            return result;
         }
 
         private static GridCell GetCellToTrack(GridCell[][] grid, int[] coordinates)
@@ -86,7 +122,7 @@ namespace GreenVsRed
                 }
             }
 
-            PrintGrid(grid);
+            //PrintGrid(grid);
         }
 
         private static void PrintGrid(GridCell[][] grid)
